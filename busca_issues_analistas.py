@@ -8,7 +8,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 # =============================
 
 GITLAB_URL = "https://gitlab.4mti.com.br"
-TOKEN = "chave-privada-gitlab"  # substitua pelo seu token
+TOKEN = "SUA-CHAVE-PRIVADA"  # substitua pelo seu token
 GROUP_ID = 94
 
 DATA_INICIO = "2026-02-01"
@@ -126,6 +126,7 @@ def salvar_csv_detalhado(issues):
             "data_planejada",
             "esta_atrasada",
             "dias_atraso",
+            "milestone",
             "labels",
             "url"
         ])
@@ -136,6 +137,7 @@ def salvar_csv_detalhado(issues):
             fechada = i.get("closed_at")[:10] if i.get("closed_at") else ""
             due = i.get("due_date") or ""
             atrasada, dias = calcula_atraso(due, estado)
+            milestone = i.get("milestone") or {}
             labels = ", ".join(i.get("labels", []))
             writer.writerow([
                 author,
@@ -147,6 +149,7 @@ def salvar_csv_detalhado(issues):
                 due,
                 atrasada,
                 dias,
+                milestone.get("title", ""),
                 labels,
                 i.get("web_url")
             ])
